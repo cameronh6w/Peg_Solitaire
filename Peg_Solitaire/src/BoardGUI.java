@@ -94,9 +94,8 @@ public class BoardGUI extends JFrame{
                     buttons[i][j].addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            if(e.getActionCommand() == "P"){
-                                System.out.println("Button");
-                            }
+                            System.out.println("Button="+ e.getActionCommand());
+                            
                         } 
                     });
             

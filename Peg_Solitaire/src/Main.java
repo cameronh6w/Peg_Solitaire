@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        new BoardGUI();
+        /* 
         PegBoard board = new  PegBoard();
         System.out.println("moves:" + board.getMoves());
         Scanner scanner = new Scanner(System.in);
@@ -36,6 +38,6 @@ public class Main {
             board.printBoard();
             System.out.println("moves:" + board.getMoves());
         }
-         
+     */    
     }
 }
