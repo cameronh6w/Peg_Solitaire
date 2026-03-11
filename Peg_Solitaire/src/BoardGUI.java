@@ -96,4 +96,28 @@ public class BoardGUI extends JFrame{
                         public void actionPerformed(ActionEvent e) {
                             if(e.getActionCommand() == "P"){
                                 System.out.println("Button");
-    
+                            }
+                        } 
+                    });
+            
+                    centerPanel.add(buttons[i][j]);
+
+                } else {
+                    centerPanel.add(new Label("")); // Add an empty label for inaccessible areas
+                }
+            }
+        }
+        add(centerPanel, BorderLayout.CENTER);
+
+
+        //additional frame settinigs
+        this.setSize(700, 500);
+        this.setTitle("Sprint 2");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        
+        this.setVisible(true);  
+    }
+
+}
+
