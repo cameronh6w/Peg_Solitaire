@@ -11,6 +11,8 @@ public class PegBoard {
         DIAMOND
     }
 
+    //constructor 
+    //POST: creates a default board to be english type and size  7
     public PegBoard(){
         //degfault
         board_size = 7;
@@ -20,8 +22,11 @@ public class PegBoard {
         game_over = false;
     }
 
+    //getters and setters
     public static int getMoves(){return moves;};
     public static int getSize(){return board_size;};
+    public static  int[][] getBoard(){return board;};
+
     public static Boolean getGameOver(){
         checkGameOver();
         return game_over;
@@ -35,8 +40,12 @@ public class PegBoard {
             game_over = true;
     }
 
+    public static void resetBoard(){
+        board = createBoard();
+    }
+
+    //POST: only  creates a  board  with english type and  size 7
     public static int[][] createBoard(){
-        //calculate based on type and size but for now im cheating
         int[][] board = {
             {-1, -1, 1, 1, 1, -1, -1},
             {-1, -1, 1, 1, 1, -1, -1},
@@ -49,6 +58,7 @@ public class PegBoard {
         return board;
     }
 
+    //POST: outputs board into terminal for testing
     public static void printBoard(){
          for (int i=0; i<board_size; i++){
             for (int j=0; j<board_size; j++){
@@ -60,42 +70,48 @@ public class PegBoard {
         }
     }
 
-
+    //POST: returns the number of moves possible on the board 
     public static int getAllPossibleMoves(){
         int moves = 0;
+        
         for (int i=0; i<board_size; i++){
             for (int j=0; j<board_size; j++){
+                
+                // look at all the empty spaces, and  see if there are two pins in any directtion 
                 if(board[i][j]==0){
+
+                    //gttting the board spots for all driections,  on and two spots away
                     int[][] dir1 = { {i-1,j},{i,j+1},{i+1,j},{i,j-1},}; //N,E,S,W one spot away
                     int[][] dir2 = { {i-2,j},{i,j+2},{i+2,j},{i,j-2},}; //N,E,S,W two spots away
 
+                    //for each direction
                     for(int k = 0; k < 4; k++){
-
-                        //check if two spots out of bounds to the N,E,S,W
+                        
+                        //check if two spots away is out of bounds
                         if(!(dir2[k][0] < 0
                             || dir2[k][1] >= board_size
                             || dir2[k][0] >= board_size
                             || dir2[k][1] < 0)){
                                 
+                                //if both spots are not out of bounds and thye both are pins, increase move count
                                 if(board[dir2[k][0]][ dir2[k][1]] == 1 
-                                    && board[dir1[k][0]][ dir1[k][1]] == 1){
+                                    && board[dir1[k][0]][ dir1[k][1]] == 1)
                                         moves++;
-                                        //System.out.println("location: "+i+","+j);
-                                        //System.out.println("2 away: "+dir2[k][0]+","+dir2[k][1]);
-                                       // System.out.println();
-                                    }
                         } 
                     }
                 }
             }
-
         }
 
+
+        //return thte number of moves 
         return moves;
     }
 
-
+    //PRE: source and goal must be arrays with size  2, 0 positon is y, 1 position is x
+    //POST: checks for any invalid moves, then updates the board matrix  for any valid  moves  
     public static void makeMove(int[] source, int[] goal){
+        
         //check if source is out of bounds
         if((source[0] < 0
             || source[1] >= board_size
@@ -104,6 +120,8 @@ public class PegBoard {
                 System.out.println("Out of bounds");
                 return;
         }
+
+        //check if goal is out of bounds
         if((goal[0] < 0
             || goal[1] >= board_size
             || goal[0] >= board_size
@@ -112,7 +130,7 @@ public class PegBoard {
                 return;
         }
 
-        //check if moves are valid
+        //check if moves are valid (source must be a pin, and  goal must be empty)
         if(board[source[0]][source[1]] != 1){
             System.out.println("invalid source");
             return;
@@ -132,6 +150,7 @@ public class PegBoard {
         }
 
         int[] middle = {-1,-1};
+        
         //find middle pin location
         if(y_dif == 2){
             middle[0] = source[0]+1;
@@ -150,14 +169,15 @@ public class PegBoard {
             middle[1] = source[1]-1;
         }
 
+        //check if middle pin is valid (must be a pin)
+        if(board[middle[0]][middle[1]] == 0){
+            System.out.println("invalid middle pin");
+            return;
+        }
 
+        //finally  update the board
         board[source[0]][source[1]] = 0;
         board[middle[0]][middle[1]] = 0;
-        board[goal[0]][goal[1]] = 1;
-    
-        
-               
+        board[goal[0]][goal[1]] = 1;       
     }
-
-    
 }
