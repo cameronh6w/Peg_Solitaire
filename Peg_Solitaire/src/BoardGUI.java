@@ -191,6 +191,4 @@ public class BoardGUI extends JFrame{
         this.setResizable(false);
         this.setVisible(true);  
     }
-
 }
-
