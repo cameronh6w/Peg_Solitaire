@@ -1,8 +1,7 @@
-
+package com.example;
 
 public class Main {
     public static void main(String[] args) {
-        new BoardGUI();
-        //PegBoard p = new PegBoard();
+        System.out.println("Hello world!");
     }
 }
