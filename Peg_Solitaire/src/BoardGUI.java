@@ -1,23 +1,37 @@
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Label;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 
 public class BoardGUI extends JFrame{
     
     //global variables so Action Listener can access them 
-    public MyButton[][] buttonsMatrix = new MyButton[7][7];
-
-    public MyButton firstClicked = null;
-    public MyButton secondClicked = null;
-    JLabel error_msg;
- 
-    PegBoard boardState = new PegBoard();
+    int board_size =  11;
+    PegBoard.Type board_type = PegBoard.Type.DIAMOND;
+    PegBoard boardState = new PegBoard(board_size,board_type);
     
+    public MyButton[][] buttonsMatrix = new MyButton[board_size][board_size];
+
+    public static MyButton firstClicked = null;
+    public static MyButton secondClicked = null;
+    public static JLabel error_msg;
+ 
+   
     BoardGUI(){
-        
         setLayout(new BorderLayout());
 
 
@@ -49,6 +63,17 @@ public class BoardGUI extends JFrame{
         
         add(bottomPanel, BorderLayout.SOUTH);
 
+        //----------------CENTER----------------------
+        //in  the cennter is the main peg solitare board made up of buttons
+        
+        Panel centerPanel = new Panel();
+        centerPanel.setLayout(new GridLayout(board_size,board_size));
+        createButtonUI(boardState,buttonsMatrix,centerPanel, board_size );
+        
+        //adds thte wholee grid of buttons to the screen
+        add(centerPanel, BorderLayout.CENTER);
+
+
         //----------------RIGHT-----------------------
         //on the right of  the screeen there is a button to start a new game 
 
@@ -56,23 +81,27 @@ public class BoardGUI extends JFrame{
         rightPanel.setLayout(new FlowLayout());
 
         JButton new_game_button = new JButton();
-        new_game_button.setText("New Game");
+        new_game_button.setText("Reset Game");
         
         //gives new game button action
         new_game_button.addActionListener(new ActionListener() {      
             @Override
             public void actionPerformed(ActionEvent e) {
                 
+
+                
+
+
                 //reset the board matrix
                 boardState.resetBoard();
- 
+
                 //update all the buttons to the board state
-                for (int i = 0; i < 7; i++) {
-                    for (int j = 0; j < 7; j++) {
+                for (int i = 0; i < board_size; i++) {
+                    for (int j = 0; j < board_size; j++) {
                         if (boardState.getBoard()[i][j] != -1) 
                             buttonsMatrix[i][j].resetButton(boardState.getBoard()[i][j]);
                     }
-                }
+                } 
             }
         });
 
@@ -95,12 +124,41 @@ public class BoardGUI extends JFrame{
         eng_rb = new JRadioButton("English");
         eng_rb.setBounds(0,150,90,50);
         eng_rb.setSelected(true);
+
+        eng_rb.addActionListener(new ActionListener() {      
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PegBoard.Type eng = PegBoard.Type.ENGLISH;
+                //reset the board matrix
+                boardState.setType(eng);
+                board_type = eng;
+            }
+        });
         
         hex_rb = new JRadioButton("Hexagon");
         hex_rb.setBounds(0,180,90,50);
+        hex_rb.addActionListener(new ActionListener() {      
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PegBoard.Type hex = PegBoard.Type.HEXAGON;
+                //reset the board matrix
+                boardState.setType(hex);
+                board_type = hex;
+            }
+        });
         
         diam_rb = new JRadioButton("Diamond");
         diam_rb.setBounds(0,225,90,50);
+
+        diam_rb.addActionListener(new ActionListener() {      
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PegBoard.Type dim = PegBoard.Type.DIAMOND;
+                //reset the board matrix
+                boardState.setType(dim);
+                board_type = dim;
+            }
+        });
     
      
         // Group the radio buttons. This ensures only one is selectable.
@@ -115,19 +173,26 @@ public class BoardGUI extends JFrame{
         add(hex_rb, BorderLayout.WEST);
         add(diam_rb, BorderLayout.WEST);
 
-        //----------------CENTER----------------------
-        //in  the cennter is the main peg solitare board made up of buttons
         
-        Panel centerPanel = new Panel();
-        centerPanel.setLayout(new GridLayout(7,7));
 
+        //additional frame settinigs
+        this.setSize(700, 500);
+        this.setTitle("Sprint 2");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.setVisible(true);  
+    }
+
+
+
+    public static void createButtonUI(PegBoard boardState, MyButton[][] buttonsMatrix, Panel centerPanel, int  board_size){
         //fill the grid with buttons
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < board_size; i++) {
+            for (int j = 0; j < board_size; j++) {
                 
                 //board state = -1 means there is no button  there
                 if (boardState.getBoard()[i][j] != -1) {
-                   
+                    
                     //create parameters for a MyButton object
                     JButton new_button = new JButton();
                     int state = boardState.getBoard()[i][j];
@@ -178,17 +243,6 @@ public class BoardGUI extends JFrame{
                     centerPanel.add(new Label("")); // Add an empty label for inaccessible areas
                 }
             }
-        }
-        
-        //adds thte wholee grid of buttons to the screen
-        add(centerPanel, BorderLayout.CENTER);
-
-
-        //additional frame settinigs
-        this.setSize(700, 500);
-        this.setTitle("Sprint 2");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
-        this.setVisible(true);  
+        }  
     }
 }

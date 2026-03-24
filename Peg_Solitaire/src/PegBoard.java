@@ -14,9 +14,24 @@ public class PegBoard {
     //constructor 
     //POST: creates a default board to be english type and size  7
     public PegBoard(){
-        //degfault
+        //default
         board_size = 7;
         type = Type.ENGLISH;
+
+        board = createBoard();
+        moves = getAllPossibleMoves();
+        game_over = false;
+    }
+
+    //constructor 
+    //PRE:  Board_size must be an odd  number and grater than 7 
+    //      Type must not be null
+    //POST: creates a default board to be english type and size  7
+    public PegBoard(int _size, Type _type){
+        
+        board_size =_size ;
+        type = _type;
+        
         board = createBoard();
         moves = getAllPossibleMoves();
         game_over = false;
@@ -25,7 +40,10 @@ public class PegBoard {
     //getters and setters
     public static int getMoves(){return moves;};
     public static int getSize(){return board_size;};
+    public static Type getType(){return type;};
     public static  int[][] getBoard(){return board;};
+    public static void setType(Type t){type = t; };
+    public static void setSize(int size){board_size = size;};
 
     public static Boolean getGameOver(){
         checkGameOver();
@@ -44,17 +62,131 @@ public class PegBoard {
         board = createBoard();
     }
 
-    //POST: only  creates a  board  with english type and  size 7
+
+    //PRE:  Board_size must be an odd  number and grater than 7 
+    //      Type must not be null
+    //POST: returns a  board  with the  type and size that the booard  is currently set to
     public static int[][] createBoard(){
-        int[][] board = {
-            {-1, -1, 1, 1, 1, -1, -1},
-            {-1, -1, 1, 1, 1, -1, -1},
-            { 1,  1, 1, 1, 1,  1,  1},
-            { 1,  1, 1, 0, 1,  1,  1}, 
-            { 1,  1, 1, 1, 1,  1,  1},
-            {-1, -1, 1, 1, 1, -1, -1},
-            {-1, -1, 1, 1, 1, -1, -1}
-        };
+
+        int[][] board = new int[board_size][board_size];
+
+        switch (type){
+            //--------ENGLISH TYPE---------
+            case ENGLISH:
+                int indexOfStartSpace = (board_size - 3) / 2;
+
+                for(int i = 0; i< board_size; i++){
+                    for(int j = 0; j< board_size; j++){
+                        //if i is in middle rows
+                        if(i >= indexOfStartSpace && i < indexOfStartSpace + 3 )
+                            board[i][j] = 1;
+                        else{
+                            //if j is in middle 3 collums
+                            if(j >= indexOfStartSpace && j < indexOfStartSpace + 3 ){
+                                board[i][j] = 1;
+                            }
+                            else{
+                                board[i][j] = -1;
+                            }
+                        }
+                        //set centter to 0
+                        if( i == board_size / 2 && j == board_size / 2)
+                            board[i][j] = 0;   
+                    }
+                }
+                break;
+
+            //--------DIAMOND TYPE---------
+            case DIAMOND:
+                
+                int mid =  board_size/2;
+
+                //do top half first 
+                for(int i = 0; i<= mid; i++){
+                    for(int j = 0; j< board_size; j++){
+                        
+                        //if j is in the range of  middle +/- i
+                        if(j >= (mid - i) && j <= (mid + i) )
+                            board[i][j] = 1;
+                        else{
+                            board[i][j] = -1;
+                        }
+
+                        // set middle to 0
+                        if( i == mid && j == mid)
+                            board[i][j] = 0;   
+                    }
+                }
+
+                //for second  half, i_sub will be counting down
+                int i_sub =  mid - 1;
+
+                //start at the next i value (mid + 1)
+                for(int i = (mid+1); i< board_size; i++){
+                    for(int j = 0; j< board_size; j++){
+                        
+                         //if j is in the range of  middle +/- i_sub
+                        if(j >= (board_size/2 - i_sub) && j <= (board_size/2 + i_sub) )
+                            board[i][j] = 1;
+                        else{
+                            board[i][j] = -1;
+                        }
+                        
+                    }
+                    //decrease  each row
+                    i_sub--;
+                }
+
+                break;
+
+
+            //--------HEXAGON TYPE---------
+            case HEXAGON:
+                indexOfStartSpace = (board_size - 3) / 2;
+
+                for(int i = 0; i< indexOfStartSpace + 3; i++){
+                    for(int j = 0; j< board_size; j++){
+                        //if i is in middle rows
+                        if(i >= indexOfStartSpace && i < indexOfStartSpace + 3 )
+                            board[i][j] = 1;
+                        else{
+                            //if j is in middle 3 collums
+                            if(j >= indexOfStartSpace-i && j < indexOfStartSpace + 3 +i){
+                                board[i][j] = 1;
+                            }
+                            else{
+                                board[i][j] = -1;
+                            }
+                        }
+                        //set centter to 0
+                        if( i == board_size / 2 && j == board_size / 2)
+                            board[i][j] = 0;   
+                    }
+                } 
+
+
+                //for second  half, i_sub will be counting down
+                i_sub =   board_size/2 - 2;
+
+                for(int i = indexOfStartSpace + 3; i< board_size; i++){
+                    for(int j = 0; j< board_size; j++){
+                        //if i is in middle rows
+                        if(i >= indexOfStartSpace && i < indexOfStartSpace + 3 )
+                            board[i][j] = 1;
+                        else{
+                            //if j is in middle 3 collums
+                            if(j >= indexOfStartSpace-i_sub && j < indexOfStartSpace + 3 +i_sub){
+                                board[i][j] = 1;
+                            }
+                            else{
+                                board[i][j] = -1;
+                            }
+                        }
+                    }
+                    i_sub--;
+                } 
+                break;
+        }
         return board;
     }
 
