@@ -2,7 +2,7 @@
 
 public class Main {
     public static void main(String[] args) {
-        new BoardGUI();
+        BoardGUI b = new BoardGUI(9,PegBoard.Type.HEXAGON);
 
     
 
