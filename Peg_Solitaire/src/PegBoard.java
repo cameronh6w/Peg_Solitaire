@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class PegBoard {
     private static int board_size;
     private static int[][] board;
@@ -202,16 +204,19 @@ public class PegBoard {
         }
     }
 
-    //POST: returns the number of moves possible on the board 
-    public static int getAllPossibleMoves(){
+
+    public static ArrayList<ArrayList<Integer>> getAllPossibleMovesList(){
         int moves = 0;
+        ArrayList<ArrayList<Integer>> allMovesList = new ArrayList<>();
+
+
         
         for (int i=0; i<board_size; i++){
             for (int j=0; j<board_size; j++){
                 
                 // look at all the empty spaces, and  see if there are two pins in any directtion 
                 if(board[i][j]==0){
-
+                   
                     //gttting the board spots for all driections,  on and two spots away
                     int[][] dir1 = { {i-1,j},{i,j+1},{i+1,j},{i,j-1},}; //N,E,S,W one spot away
                     int[][] dir2 = { {i-2,j},{i,j+2},{i+2,j},{i,j-2},}; //N,E,S,W two spots away
@@ -226,16 +231,60 @@ public class PegBoard {
                             || dir2[k][1] < 0)){
                                 
                                 //if both spots are not out of bounds and thye both are pins, increase move count
-                                if(board[dir2[k][0]][ dir2[k][1]] == 1 
-                                    && board[dir1[k][0]][ dir1[k][1]] == 1)
+                                if(board[dir2[k][0]][ dir2[k][1]] == 1  
+                                    && board[dir1[k][0]][ dir1[k][1]] == 1){
+                                        allMovesList.add(new ArrayList<Integer>());
+                                        allMovesList.get(moves).add(dir2[k][0]);
+                                        allMovesList.get(moves).add(dir2[k][1]) ;
+                                        allMovesList.get(moves).add(i);
+                                        allMovesList.get(moves).add(j);
                                         moves++;
+
+                                }
+                                
                         } 
                     }
+                   
                 }
             }
         }
 
+        return allMovesList;
+    }
+    //POST: returns the number of moves possible on the board 
+    public static int getAllPossibleMoves(){
+        int moves = 0;
+       
+        for (int i=0; i<board_size; i++){
+            for (int j=0; j<board_size; j++){
+                
+                // look at all the empty spaces, and  see if there are two pins in any directtion 
+                if(board[i][j]==0){
+                   
+                    //gttting the board spots for all driections,  on and two spots away
+                    int[][] dir1 = { {i-1,j},{i,j+1},{i+1,j},{i,j-1},}; //N,E,S,W one spot away
+                    int[][] dir2 = { {i-2,j},{i,j+2},{i+2,j},{i,j-2},}; //N,E,S,W two spots away
 
+                    //for each direction
+                    for(int k = 0; k < 4; k++){
+                        
+                        //check if two spots away is out of bounds
+                        if(!(dir2[k][0] < 0
+                            || dir2[k][1] >= board_size
+                            || dir2[k][0] >= board_size
+                            || dir2[k][1] < 0)){
+                                
+                                //if both spots are not out of bounds and thye both are pins, increase move count
+                                if(board[dir2[k][0]][ dir2[k][1]] == 1  
+                                    && board[dir1[k][0]][ dir1[k][1]] == 1){
+                                        moves++;
+                                }
+                        } 
+                    }
+                   
+                }
+            }
+        }
         //return thte number of moves 
         return moves;
     }

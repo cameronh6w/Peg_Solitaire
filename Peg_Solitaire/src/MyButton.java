@@ -8,6 +8,7 @@ public class MyButton {
     int state;
     JButton button;
 
+
     //constructor 
     //PRE:  _state can only be  1 or 0
     //      _x and _y must be withing the board size
@@ -20,6 +21,7 @@ public class MyButton {
         
         x = _x;
         y = _y;
+
     }
 
     //PRE: _state can only be  1 or 0

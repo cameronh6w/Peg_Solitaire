@@ -8,6 +8,7 @@ import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -17,16 +18,29 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 
 public class BoardGUI extends JFrame{
     
     //global variables so Action Listener can access them 
     int board_size; 
+
+
+
     PegBoard.Type board_type;
     PegBoard boardState;
     
-    public MyButton[][] buttonsMatrix;
+    MyButton[][] buttonsMatrix;
+
+    public  void getMatrix(MyButton[][] newMatrix){
+         for (int i = 0; i < board_size; i++) {
+            for (int j = 0; j < board_size; j++) {
+                newMatrix[i][j] =  buttonsMatrix[i][j];
+            }
+        }
+
+    }
 
     public static MyButton firstClicked = null;
     public static MyButton secondClicked = null;
@@ -123,9 +137,36 @@ public class BoardGUI extends JFrame{
         });
         rightPanel.add(new_game_button);
 
+
         JButton auto_play_button = new JButton();
         auto_play_button.setText("Auto Play");
+        auto_play_button.addActionListener(new ActionListener() {      
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("test");
+            }
+        });
         rightPanel.add(auto_play_button);
+
+       
+                //ArrayList<ArrayList<Integer>> list = boardState.getAllPossibleMovesList();
+        
+                /* 
+                int move = 0;
+                while(list.size()>0){
+                    move = (int) (Math.random()* (list.size()));
+                    clickButton(list.get(move).get(0),list.get(move).get(1),boardState,buttonsMatrix);
+                    clickButton(list.get(move).get(2),list.get(move).get(3),boardState,buttonsMatrix);
+                    list = boardState.getAllPossibleMovesList();
+                    try {
+                        Thread.sleep(500); 
+                    } catch (InterruptedException a) {
+                        a.printStackTrace(); 
+                    }
+
+                }*/
+            //}
+       
 
         JButton random_play_button = new JButton();
         random_play_button.setText("Random Play");
@@ -403,6 +444,14 @@ public class BoardGUI extends JFrame{
         new BoardGUI(_size,_type);
     }
 
+    public static  void clickButton(int y, int x, PegBoard board,  MyButton[][] buttonsMatrix){
+        if(board.getBoard()[y][x] != -1){
+            MyButton button = buttonsMatrix[y][x]; 
+       
+            button.getButton().doClick(); 
+        }
+    }
+
 
     @SuppressWarnings("static-access")
     public static void createButtonUI(PegBoard boardState, MyButton[][] buttonsMatrix, Panel centerPanel, int  board_size){
@@ -453,7 +502,7 @@ public class BoardGUI extends JFrame{
                             }
                         } 
                     });
-            
+
                     //add each button to the panel
                     centerPanel.add(buttonsMatrix[i][j].getButton());
 
