@@ -45,6 +45,8 @@ public class MyButton {
 
     //POST: changes backgound of button to  blue to indicate it's been selectetd
     public void firstClickButton(){
+
+        System.out.println("Test1");
         button.setBackground(Color.BLUE);
     }
 
@@ -60,7 +62,7 @@ public class MyButton {
     //PRE:  lastClickedButton must be the source pin for the attempted move
     //POST: if the move from lastClickedButton to the current button is valid, update buttons
     public void secondClickButton(MyButton lastClickedButton, MyButton[][] buttonsMatrix, JLabel error){
-        
+        System.out.println("Test2");
         //check if source is valid
         if(lastClickedButton.getState() != 1){
             deselectButtons("Invalid Source", lastClickedButton, error);
@@ -90,6 +92,7 @@ public class MyButton {
             return;
         }
 
+         System.out.println("Test2");
         //if all is valid deslect with no error  message
         deselectButtons(" ", lastClickedButton, error);
 
@@ -97,6 +100,7 @@ public class MyButton {
         buttonsMatrix[middle[0]][middle[1]].setState(0);
         lastClickedButton.setState(0);
         setState(1);
+        
     }
 
     //uses same calcualtion for finding middle as peg board does
@@ -120,7 +124,7 @@ public class MyButton {
             middle[0] = source.getY();
             middle[1] = source.getX()-1;
         }
-        System.out.println(middle[0]+","+middle[1]);
+        //Sytem.out.println(middle[0]+","+middle[1]);
         return middle;
     }
 }

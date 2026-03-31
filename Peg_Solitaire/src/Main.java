@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        new BoardGUI(7,PegBoard.Type.ENGLISH);
+        BoardGUI b = new BoardGUI(7,PegBoard.Type.ENGLISH);
         
-        
-        /*b.boardState.getAllPossibleMoves();
+        /*
+        b.boardState.getAllPossibleMoves();
 
     
         System.out.println("test");
@@ -37,12 +37,14 @@ public class Main {
 
 
     }
-/* 
+
+    /* 
+ 
     public static  void clickButton(int y, int x, BoardGUI b){
         if(b.boardState.getBoard()[y][x] != -1){
             MyButton button = b.buttonsMatrix[y][x]; 
        
             button.getButton().doClick(); 
         }
-    }
-*/}
+    }*/
+}

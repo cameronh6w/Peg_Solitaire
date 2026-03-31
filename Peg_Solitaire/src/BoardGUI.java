@@ -137,16 +137,17 @@ public class BoardGUI extends JFrame{
         });
         rightPanel.add(new_game_button);
 
-
+/*
         JButton auto_play_button = new JButton();
-        auto_play_button.setText("Auto Play");
+        auto_play_button.setText("Auto test Play");
         auto_play_button.addActionListener(new ActionListener() {      
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("test");
+                
             }
-        });
-        rightPanel.add(auto_play_button);
+        });*/
+
+        //rightPanel.add(auto_play_button);
 
        
                 //ArrayList<ArrayList<Integer>> list = boardState.getAllPossibleMovesList();
@@ -170,6 +171,7 @@ public class BoardGUI extends JFrame{
 
         JButton random_play_button = new JButton();
         random_play_button.setText("Random Play");
+        
         rightPanel.add(random_play_button);
         
         add(rightPanel, BorderLayout.EAST);
@@ -349,6 +351,51 @@ public class BoardGUI extends JFrame{
 
         JButton auto_play_button = new JButton();
         auto_play_button.setText("Auto Play");
+        auto_play_button.addActionListener(new ActionListener() {      
+            @Override
+            @SuppressWarnings("static-access")
+            public void actionPerformed(ActionEvent e) {
+                
+                ArrayList<ArrayList<Integer>> list = boardState.getAllPossibleMovesList();
+
+                int move = (int) (Math.random()* (list.size()));
+
+                clickButton(list.get(move).get(0),list.get(move).get(1),boardState,buttonsMatrix);
+                System.out.println("move 1");
+                clickButton(list.get(move).get(2),list.get(move).get(3),boardState,buttonsMatrix);
+                list = boardState.getAllPossibleMovesList();
+                System.out.println("move 2");
+
+
+                
+                try {
+                    Thread.sleep(200); 
+                } catch (InterruptedException a) {
+                    a.printStackTrace(); 
+                }
+                
+                  /* 
+                int move = 0;
+                while(list.size()>0){
+                    
+                    move = (int) (Math.random()* (list.size()));
+                    System.out.println(move);
+                    clickButton(list.get(move).get(0),list.get(move).get(1),boardState,buttonsMatrix);
+                    System.out.println("move 1");
+                    clickButton(list.get(move).get(2),list.get(move).get(3),boardState,buttonsMatrix);
+                    System.out.println("move 2");
+
+                    try {
+                        Thread.sleep(1000); 
+                    } catch (InterruptedException a) {
+                        a.printStackTrace(); 
+                    }
+                    list = boardState.getAllPossibleMovesList();
+
+                }*/
+
+            }
+        });
         rightPanel.add(auto_play_button);
 
         JButton random_play_button = new JButton();
@@ -444,11 +491,19 @@ public class BoardGUI extends JFrame{
         new BoardGUI(_size,_type);
     }
 
+     
     public static  void clickButton(int y, int x, PegBoard board,  MyButton[][] buttonsMatrix){
         if(board.getBoard()[y][x] != -1){
             MyButton button = buttonsMatrix[y][x]; 
        
             button.getButton().doClick(); 
+
+            /* 
+            try {
+                Thread.sleep(200); 
+            } catch (InterruptedException a) {
+                a.printStackTrace(); 
+            }*/
         }
     }
 
