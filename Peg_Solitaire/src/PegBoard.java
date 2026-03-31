@@ -20,7 +20,7 @@ public class PegBoard {
         board_size = 7;
         type = Type.ENGLISH;
 
-        board = createBoard();
+        board = createBoard(false);
         moves = getAllPossibleMoves();
         game_over = false;
     }
@@ -29,12 +29,12 @@ public class PegBoard {
     //PRE:  Board_size must be an odd  number and grater than 7 
     //      Type must not be null
     //POST: creates a default board to be english type and size  7
-    public PegBoard(int _size, Type _type){
+    public PegBoard(int _size, Type _type, Boolean random){
         
         board_size =_size ;
         type = _type;
         
-        board = createBoard();
+        board = createBoard(random);
         moves = getAllPossibleMoves();
         game_over = false;
     }
@@ -61,16 +61,17 @@ public class PegBoard {
     }
 
     public static void resetBoard(){
-        board = createBoard();
+        board = createBoard(false);
     }
 
 
     //PRE:  Board_size must be an odd  number and grater than 7 
     //      Type must not be null
     //POST: returns a  board  with the  type and size that the booard  is currently set to
-    public static int[][] createBoard(){
+    public static int[][] createBoard(Boolean random){
 
         int[][] board = new int[board_size][board_size];
+
 
         switch (type){
             //--------ENGLISH TYPE---------
@@ -81,11 +82,18 @@ public class PegBoard {
                     for(int j = 0; j< board_size; j++){
                         //if i is in middle rows
                         if(i >= indexOfStartSpace && i < indexOfStartSpace + 3 )
-                            board[i][j] = 1;
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 1;
                         else{
                             //if j is in middle 3 collums
                             if(j >= indexOfStartSpace && j < indexOfStartSpace + 3 ){
+                               if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
                                 board[i][j] = 1;
+
                             }
                             else{
                                 board[i][j] = -1;
@@ -93,9 +101,14 @@ public class PegBoard {
                         }
                         //set centter to 0
                         if( i == board_size / 2 && j == board_size / 2)
-                            board[i][j] = 0;   
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 0;
+                            //board[i][j] = 0;   
                     }
                 }
+                //printBoard();
                 break;
 
             //--------DIAMOND TYPE---------
@@ -108,15 +121,24 @@ public class PegBoard {
                     for(int j = 0; j< board_size; j++){
                         
                         //if j is in the range of  middle +/- i
-                        if(j >= (mid - i) && j <= (mid + i) )
-                            board[i][j] = 1;
+                        if(j >= (mid - i) && j <= (mid + i) ){
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 1;
+                        }
                         else{
                             board[i][j] = -1;
                         }
 
                         // set middle to 0
-                        if( i == mid && j == mid)
-                            board[i][j] = 0;   
+                        if( i == mid && j == mid){
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 0;
+                        }
+                            //board[i][j] = 0;   
                     }
                 }
 
@@ -128,8 +150,12 @@ public class PegBoard {
                     for(int j = 0; j< board_size; j++){
                         
                          //if j is in the range of  middle +/- i_sub
-                        if(j >= (board_size/2 - i_sub) && j <= (board_size/2 + i_sub) )
-                            board[i][j] = 1;
+                        if(j >= (board_size/2 - i_sub) && j <= (board_size/2 + i_sub) ){
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 1;
+                        }
                         else{
                             board[i][j] = -1;
                         }
@@ -150,19 +176,29 @@ public class PegBoard {
                     for(int j = 0; j< board_size; j++){
                         //if i is in middle rows
                         if(i >= indexOfStartSpace && i < indexOfStartSpace + 3 )
-                            board[i][j] = 1;
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 1;
                         else{
                             //if j is in middle 3 collums
                             if(j >= indexOfStartSpace-i && j < indexOfStartSpace + 3 +i){
-                                board[i][j] = 1;
-                            }
+                                if(random) 
+                                    board[i][j] = (int) (Math.random()* (2));
+                                else
+                                    board[i][j] = 1;
+                                }
                             else{
                                 board[i][j] = -1;
                             }
                         }
                         //set centter to 0
-                        if( i == board_size / 2 && j == board_size / 2)
-                            board[i][j] = 0;   
+                        if( i == board_size / 2 && j == board_size / 2){
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 0; 
+                        }  
                     }
                 } 
 
@@ -173,12 +209,19 @@ public class PegBoard {
                 for(int i = indexOfStartSpace + 3; i< board_size; i++){
                     for(int j = 0; j< board_size; j++){
                         //if i is in middle rows
-                        if(i >= indexOfStartSpace && i < indexOfStartSpace + 3 )
-                            board[i][j] = 1;
+                        if(i >= indexOfStartSpace && i < indexOfStartSpace + 3 ){
+                            if(random) 
+                                board[i][j] = (int) (Math.random()* (2));
+                            else
+                                board[i][j] = 1;
+                        }
                         else{
                             //if j is in middle 3 collums
                             if(j >= indexOfStartSpace-i_sub && j < indexOfStartSpace + 3 +i_sub){
-                                board[i][j] = 1;
+                               if(random) 
+                                    board[i][j] = (int) (Math.random()* (2));
+                                else
+                                    board[i][j] = 1;
                             }
                             else{
                                 board[i][j] = -1;

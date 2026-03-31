@@ -45,14 +45,11 @@ public class MyButton {
 
     //POST: changes backgound of button to  blue to indicate it's been selectetd
     public void firstClickButton(){
-
-        System.out.println("Test1");
         button.setBackground(Color.BLUE);
     }
 
     //cratted to reduce repeteativeness 
     public void deselectButtons(String text, MyButton lastClickedButton, JLabel error){
-        System.out.println(text);
         error.setText(text);
 
         button.setBackground(Color.WHITE);
@@ -62,7 +59,6 @@ public class MyButton {
     //PRE:  lastClickedButton must be the source pin for the attempted move
     //POST: if the move from lastClickedButton to the current button is valid, update buttons
     public void secondClickButton(MyButton lastClickedButton, MyButton[][] buttonsMatrix, JLabel error){
-        System.out.println("Test2");
         //check if source is valid
         if(lastClickedButton.getState() != 1){
             deselectButtons("Invalid Source", lastClickedButton, error);
@@ -92,7 +88,6 @@ public class MyButton {
             return;
         }
 
-         System.out.println("Test2");
         //if all is valid deslect with no error  message
         deselectButtons(" ", lastClickedButton, error);
 

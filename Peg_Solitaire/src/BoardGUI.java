@@ -51,7 +51,7 @@ public class BoardGUI extends JFrame{
 
         board_size =  7;
         board_type = PegBoard.Type.ENGLISH;
-        boardState = new PegBoard(board_size,board_type);
+        boardState = new PegBoard(board_size,board_type, false);
     
         buttonsMatrix = new MyButton[board_size][board_size];
 
@@ -72,19 +72,7 @@ public class BoardGUI extends JFrame{
 
         //board size input (doesn't do anything right now)
         JTextField textField = new JTextField("7", 2);
-        textField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //do try catch here
-                int input = Integer.parseInt(textField.getText());
-                if(input % 2 != 0 && input >=7 ){
-                    board_size = input;
-                }
-            }
-        });
-
-        topPanel.add(textField);
-        
+        topPanel.add(textField);  
         add(topPanel, BorderLayout.NORTH);
         
         //----------------BOTTOM-----------------------
@@ -117,61 +105,14 @@ public class BoardGUI extends JFrame{
 
         JButton new_game_button = new JButton();
         new_game_button.setText("Reset Game");
-        //gives new game button action
-        new_game_button.addActionListener(new ActionListener() {      
-            @Override
-            @SuppressWarnings("static-access")
-            public void actionPerformed(ActionEvent e) {
-
-                //reset the board matrix
-                boardState.resetBoard();
-
-                //update all the buttons to the board state
-                for (int i = 0; i < board_size; i++) {
-                    for (int j = 0; j < board_size; j++) {
-                        if (boardState.getBoard()[i][j] != -1) 
-                            buttonsMatrix[i][j].resetButton(boardState.getBoard()[i][j]);
-                    }
-                } 
-            }
-        });
         rightPanel.add(new_game_button);
 
-/*
         JButton auto_play_button = new JButton();
-        auto_play_button.setText("Auto test Play");
-        auto_play_button.addActionListener(new ActionListener() {      
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-        });*/
-
-        //rightPanel.add(auto_play_button);
-
-       
-                //ArrayList<ArrayList<Integer>> list = boardState.getAllPossibleMovesList();
-        
-                /* 
-                int move = 0;
-                while(list.size()>0){
-                    move = (int) (Math.random()* (list.size()));
-                    clickButton(list.get(move).get(0),list.get(move).get(1),boardState,buttonsMatrix);
-                    clickButton(list.get(move).get(2),list.get(move).get(3),boardState,buttonsMatrix);
-                    list = boardState.getAllPossibleMovesList();
-                    try {
-                        Thread.sleep(500); 
-                    } catch (InterruptedException a) {
-                        a.printStackTrace(); 
-                    }
-
-                }*/
-            //}
-       
+        auto_play_button.setText("Auto Play");
+        rightPanel.add(auto_play_button);       
 
         JButton random_play_button = new JButton();
         random_play_button.setText("Random Play");
-        
         rightPanel.add(random_play_button);
         
         add(rightPanel, BorderLayout.EAST);
@@ -191,45 +132,12 @@ public class BoardGUI extends JFrame{
         eng_rb = new JRadioButton("English");
         eng_rb.setBounds(0,150,90,50);
         eng_rb.setSelected(true);
-
-        eng_rb.addActionListener(new ActionListener() {      
-            @Override
-            @SuppressWarnings("static-access")
-            public void actionPerformed(ActionEvent e) {
-                PegBoard.Type eng = PegBoard.Type.ENGLISH;
-                //reset the board matrix
-                boardState.setType(eng);
-                board_type = eng;
-            }
-        });
         
         hex_rb = new JRadioButton("Hexagon");
         hex_rb.setBounds(0,180,90,50);
-        hex_rb.addActionListener(new ActionListener() {      
-            @Override
-            @SuppressWarnings("static-access")
-            public void actionPerformed(ActionEvent e) {
-                PegBoard.Type hex = PegBoard.Type.HEXAGON;
-                //reset the board matrix
-                boardState.setType(hex);
-                board_type = hex;
-            }
-        });
-        
+    
         diam_rb = new JRadioButton("Diamond");
         diam_rb.setBounds(0,225,90,50);
-
-        diam_rb.addActionListener(new ActionListener() {      
-            @Override
-            @SuppressWarnings("static-access")
-            public void actionPerformed(ActionEvent e) {
-                PegBoard.Type dim = PegBoard.Type.DIAMOND;
-                //reset the board matrix
-                boardState.setType(dim);
-                board_type = dim;
-            }
-        });
-    
      
         // Group the radio buttons. This ensures only one is selectable.
         ButtonGroup group = new ButtonGroup();
@@ -254,11 +162,11 @@ public class BoardGUI extends JFrame{
     }
 
 
-    BoardGUI(int _size, PegBoard.Type _type){
+    BoardGUI(int _size, PegBoard.Type _type, Boolean random){
         board_size = _size;
         board_type = _type;
-        boardState = new PegBoard(board_size,board_type);
-    
+        boardState = new PegBoard(board_size,board_type, random);
+        
         buttonsMatrix = new MyButton[board_size][board_size];
 
 
@@ -326,25 +234,8 @@ public class BoardGUI extends JFrame{
         //gives new game button action
         new_game_button.addActionListener(new ActionListener() {      
             @Override
-            @SuppressWarnings("static-access")
             public void actionPerformed(ActionEvent e) {
-                test(board_size, board_type);
-                /* 
-                //reset the board matrix
-                boardState.resetBoard();
-
-                //update all the buttons to the board state
-                for (int i = 0; i < board_size; i++) {
-                    for (int j = 0; j < board_size; j++) {
-                        if (boardState.getBoard()[i][j] != -1) 
-                            buttonsMatrix[i][j].resetButton(boardState.getBoard()[i][j]);
-                    }
-                } 
-                */
-
-
-
-                
+                resetBoard(board_size, board_type, false);
             }
         });
         rightPanel.add(new_game_button);
@@ -353,53 +244,33 @@ public class BoardGUI extends JFrame{
         auto_play_button.setText("Auto Play");
         auto_play_button.addActionListener(new ActionListener() {      
             @Override
-            @SuppressWarnings("static-access")
             public void actionPerformed(ActionEvent e) {
-                
+                //Get all possible  moves and  pick a random move
                 ArrayList<ArrayList<Integer>> list = boardState.getAllPossibleMovesList();
-
                 int move = (int) (Math.random()* (list.size()));
 
+                //make that move
                 clickButton(list.get(move).get(0),list.get(move).get(1),boardState,buttonsMatrix);
-                System.out.println("move 1");
                 clickButton(list.get(move).get(2),list.get(move).get(3),boardState,buttonsMatrix);
-                list = boardState.getAllPossibleMovesList();
-                System.out.println("move 2");
 
-
-                
+                //paue before moving the piece
                 try {
                     Thread.sleep(200); 
                 } catch (InterruptedException a) {
                     a.printStackTrace(); 
                 }
-                
-                  /* 
-                int move = 0;
-                while(list.size()>0){
-                    
-                    move = (int) (Math.random()* (list.size()));
-                    System.out.println(move);
-                    clickButton(list.get(move).get(0),list.get(move).get(1),boardState,buttonsMatrix);
-                    System.out.println("move 1");
-                    clickButton(list.get(move).get(2),list.get(move).get(3),boardState,buttonsMatrix);
-                    System.out.println("move 2");
-
-                    try {
-                        Thread.sleep(1000); 
-                    } catch (InterruptedException a) {
-                        a.printStackTrace(); 
-                    }
-                    list = boardState.getAllPossibleMovesList();
-
-                }*/
-
             }
         });
         rightPanel.add(auto_play_button);
 
         JButton random_play_button = new JButton();
         random_play_button.setText("Random Play");
+        random_play_button.addActionListener(new ActionListener() {      
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetBoard(board_size, board_type,  true);
+            }
+        });
         rightPanel.add(random_play_button);
         
         add(rightPanel, BorderLayout.EAST);
@@ -423,7 +294,6 @@ public class BoardGUI extends JFrame{
 
         eng_rb.addActionListener(new ActionListener() {      
             @Override
-            @SuppressWarnings("static-access")
             public void actionPerformed(ActionEvent e) {
                 PegBoard.Type eng = PegBoard.Type.ENGLISH;
                 //reset the board matrix
@@ -439,7 +309,6 @@ public class BoardGUI extends JFrame{
 
         hex_rb.addActionListener(new ActionListener() {      
             @Override
-            @SuppressWarnings("static-access")
             public void actionPerformed(ActionEvent e) {
                 PegBoard.Type hex = PegBoard.Type.HEXAGON;
                 //reset the board matrix
@@ -452,9 +321,9 @@ public class BoardGUI extends JFrame{
         diam_rb.setBounds(0,225,90,50);
         if(board_type == PegBoard.Type.DIAMOND)
             diam_rb.setSelected(true);
+        
         diam_rb.addActionListener(new ActionListener() {      
             @Override
-            @SuppressWarnings("static-access")
             public void actionPerformed(ActionEvent e) {
                 PegBoard.Type dim = PegBoard.Type.DIAMOND;
                 //reset the board matrix
@@ -462,7 +331,6 @@ public class BoardGUI extends JFrame{
                 board_type = dim;
             }
         });
-    
      
         // Group the radio buttons. This ensures only one is selectable.
         ButtonGroup group = new ButtonGroup();
@@ -476,8 +344,6 @@ public class BoardGUI extends JFrame{
         add(hex_rb, BorderLayout.WEST);
         add(diam_rb, BorderLayout.WEST);
 
-        
-
         //additional frame settinigs
         this.setSize(700, 500);
         this.setTitle("Sprint 2");
@@ -487,28 +353,18 @@ public class BoardGUI extends JFrame{
     }
 
 
-    public static void test(int _size, PegBoard.Type _type){
-        new BoardGUI(_size,_type);
+    public static void resetBoard(int _size, PegBoard.Type _type, Boolean random){
+        new BoardGUI(_size,_type,random);
     }
 
-     
     public static  void clickButton(int y, int x, PegBoard board,  MyButton[][] buttonsMatrix){
         if(board.getBoard()[y][x] != -1){
             MyButton button = buttonsMatrix[y][x]; 
        
             button.getButton().doClick(); 
-
-            /* 
-            try {
-                Thread.sleep(200); 
-            } catch (InterruptedException a) {
-                a.printStackTrace(); 
-            }*/
         }
     }
 
-
-    @SuppressWarnings("static-access")
     public static void createButtonUI(PegBoard boardState, MyButton[][] buttonsMatrix, Panel centerPanel, int  board_size){
         //fill the grid with buttons
         for (int i = 0; i < board_size; i++) {
