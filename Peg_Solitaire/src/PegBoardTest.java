@@ -11,7 +11,38 @@ public class PegBoardTest {
 
     @BeforeEach
     void setup() {
-        PegBoard board = new PegBoard();
+        PegBoard p = new PegBoard();
+    }
+
+    @Test
+    void testRandomBoardHasValidPlayableValues() {
+       int board_size = 7;
+        PegBoard.Type type = PegBoard.Type.ENGLISH;
+        PegBoard p = new PegBoard(board_size, type,true);
+
+        int[][] board = PegBoard.createBoard(true);
+
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (board[i][j] != -1) {
+                    assertTrue(board[i][j] == 0 || board[i][j] == 1);
+                }
+            }
+        }
+    }
+     
+    @Test
+    void testEnglishBoardCornersAreInvalid() {
+        int board_size = 7;
+        PegBoard.Type type = PegBoard.Type.ENGLISH;
+        PegBoard p = new PegBoard(board_size, type,false);
+
+        int[][] board = PegBoard.createBoard(false);
+
+        assertEquals(-1, board[0][0]);
+        assertEquals(-1, board[0][6]);
+        assertEquals(-1, board[6][0]);
+        assertEquals(-1, board[6][6]);
     }
 
     @Test

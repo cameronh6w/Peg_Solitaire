@@ -1,13 +1,11 @@
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -46,7 +44,7 @@ public class BoardGUI extends JFrame{
     public static MyButton secondClicked = null;
     public static JLabel error_msg;
  
-   
+   /*
     BoardGUI(){
 
         board_size =  7;
@@ -62,7 +60,7 @@ public class BoardGUI extends JFrame{
         //-------------TOP--------------------------
         //at the top of the screen there is input for board size 
 
-        Panel topPanel = new Panel();
+        JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         
         //board size text
@@ -78,7 +76,7 @@ public class BoardGUI extends JFrame{
         //----------------BOTTOM-----------------------
         //at the bottom of the screen there is text that tells player if move is invalid 
 
-        Panel bottomPanel = new Panel();
+        JPanel bottomPanel = new JPanel();
         
         error_msg = new JLabel("Click a Peg to move!");
         error_msg.setVerticalAlignment(JLabel.BOTTOM);
@@ -89,7 +87,7 @@ public class BoardGUI extends JFrame{
         //----------------CENTER----------------------
         //in  the cennter is the main peg solitare board made up of buttons
         
-        Panel centerPanel = new Panel();
+        JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(board_size,board_size));
         createButtonUI(boardState,buttonsMatrix,centerPanel, board_size );
         
@@ -100,7 +98,7 @@ public class BoardGUI extends JFrame{
         //----------------RIGHT-----------------------
         //on the right of  the screeen there is a button to start a new game 
 
-        Panel rightPanel = new Panel();
+        JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
         JButton new_game_button = new JButton();
@@ -146,10 +144,20 @@ public class BoardGUI extends JFrame{
         group.add(diam_rb);
 
         //add elements to the left screen
-        add(board_title, BorderLayout.WEST);
-        add(eng_rb, BorderLayout.WEST);
-        add(hex_rb, BorderLayout.WEST);
-        add(diam_rb, BorderLayout.WEST);
+        //add(board_title, BorderLayout.WEST);
+        //add(eng_rb, BorderLayout.WEST);
+        //add(hex_rb, BorderLayout.WEST);
+        //add(diam_rb, BorderLayout.WEST);
+
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+
+        leftPanel.add(board_title);
+        leftPanel.add(eng_rb);
+        leftPanel.add(hex_rb);
+        leftPanel.add(diam_rb);
+
+        add(leftPanel, BorderLayout.WEST);
 
         
 
@@ -161,7 +169,7 @@ public class BoardGUI extends JFrame{
         this.setVisible(true);  
     }
 
-
+*/
     BoardGUI(int _size, PegBoard.Type _type, Boolean random){
         board_size = _size;
         board_type = _type;
@@ -176,7 +184,7 @@ public class BoardGUI extends JFrame{
         //-------------TOP--------------------------
         //at the top of the screen there is input for board size 
 
-        Panel topPanel = new Panel();
+        JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         
         //board size text
@@ -184,18 +192,9 @@ public class BoardGUI extends JFrame{
         label.setVerticalAlignment(JLabel.CENTER);
         topPanel.add(label);
 
-        //board size input (doesn't do anything right now)
+        //board size input
         JTextField textField = new JTextField(String.valueOf(board_size), 2);
-        textField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //do try catch here
-                int input = Integer.parseInt(textField.getText());
-                if(input % 2 != 0 && input >=7 ){
-                    board_size = input;
-                }
-            }
-        });
+        textField.addActionListener(e -> board_size= ActionController.getSizeInput(textField,  board_size));
 
         topPanel.add(textField);
         
@@ -204,7 +203,7 @@ public class BoardGUI extends JFrame{
         //----------------BOTTOM-----------------------
         //at the bottom of the screen there is text that tells player if move is invalid 
 
-        Panel bottomPanel = new Panel();
+        JPanel bottomPanel = new JPanel();
         
         error_msg = new JLabel("Click a Peg to move!");
         error_msg.setVerticalAlignment(JLabel.BOTTOM);
@@ -215,7 +214,7 @@ public class BoardGUI extends JFrame{
         //----------------CENTER----------------------
         //in  the cennter is the main peg solitare board made up of buttons
         
-        Panel centerPanel = new Panel();
+        JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(board_size,board_size));
         createButtonUI(boardState,buttonsMatrix,centerPanel, board_size );
         
@@ -226,51 +225,23 @@ public class BoardGUI extends JFrame{
         //----------------RIGHT-----------------------
         //on the right of  the screeen there is a button to start a new game 
 
-        Panel rightPanel = new Panel();
+        JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
         JButton new_game_button = new JButton();
         new_game_button.setText("Reset Game");
-        //gives new game button action
-        new_game_button.addActionListener(new ActionListener() {      
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resetBoard(board_size, board_type, false);
-            }
-        });
+        new_game_button.addActionListener(e -> resetBoard(board_size, board_type, false));
         rightPanel.add(new_game_button);
 
         JButton auto_play_button = new JButton();
         auto_play_button.setText("Auto Play");
-        auto_play_button.addActionListener(new ActionListener() {      
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Get all possible  moves and  pick a random move
-                ArrayList<ArrayList<Integer>> list = boardState.getAllPossibleMovesList();
-                int move = (int) (Math.random()* (list.size()));
-
-                //make that move
-                clickButton(list.get(move).get(0),list.get(move).get(1),boardState,buttonsMatrix);
-                clickButton(list.get(move).get(2),list.get(move).get(3),boardState,buttonsMatrix);
-
-                //paue before moving the piece
-                try {
-                    Thread.sleep(200); 
-                } catch (InterruptedException a) {
-                    a.printStackTrace(); 
-                }
-            }
-        });
+        auto_play_button.addActionListener(e -> ActionController.autoPlayAction(  boardState,  buttonsMatrix, error_msg));
         rightPanel.add(auto_play_button);
 
         JButton random_play_button = new JButton();
         random_play_button.setText("Random Play");
-        random_play_button.addActionListener(new ActionListener() {      
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resetBoard(board_size, board_type,  true);
-            }
-        });
+        random_play_button.addActionListener(e -> resetBoard(board_size, board_type, true));
+        
         rightPanel.add(random_play_button);
         
         add(rightPanel, BorderLayout.EAST);
@@ -353,20 +324,14 @@ public class BoardGUI extends JFrame{
     }
 
 
-    public static void resetBoard(int _size, PegBoard.Type _type, Boolean random){
+    public void resetBoard(int _size, PegBoard.Type _type, Boolean random){
+        this.dispose();
         new BoardGUI(_size,_type,random);
     }
 
-    public static  void clickButton(int y, int x, PegBoard board,  MyButton[][] buttonsMatrix){
-        if(board.getBoard()[y][x] != -1){
-            MyButton button = buttonsMatrix[y][x]; 
-       
-            button.getButton().doClick(); 
-        }
-    }
-
-    public static void createButtonUI(PegBoard boardState, MyButton[][] buttonsMatrix, Panel centerPanel, int  board_size){
+    public static void createButtonUI(PegBoard boardState, MyButton[][] buttonsMatrix, JPanel centerPanel, int  board_size){
         //fill the grid with buttons
+
         for (int i = 0; i < board_size; i++) {
             for (int j = 0; j < board_size; j++) {
                 
@@ -382,37 +347,9 @@ public class BoardGUI extends JFrame{
                     buttonsMatrix[i][j] = button;
                     
                     //give every button an action when clicked
-                    button.getButton().addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            
-                            //if it's the first button selcted, all it does is change the coloor
-                            if(firstClicked == null){
-                                button.firstClickButton();
-                                firstClicked = button;
-                            }
-                            //if its the second button selected, the buttons will check if it's a valid move 
-                            else{
-                                
-                                //this makes the move for the buttons on tthe screen
-                                button.secondClickButton(firstClicked, buttonsMatrix, error_msg);
 
-                                //this makes the move for the peg board to stay updated 
-                                int[] source = {firstClicked.y, firstClicked.x};
-                                int[] goal = {button.y, button.x};
-                                boardState.makeMove(source, goal);
-                                
-
-                                //resets the move
-                                firstClicked = null;
-                            }
-
-                            //updates for when  the game is over
-                            if(boardState.getGameOver()){
-                                error_msg.setText("No More Possible Moves! Game Over!");
-                            }
-                        } 
-                    });
+                    button.getButton().addActionListener(e -> firstClicked = ActionController.buttonAction( firstClicked,  button,  boardState,  buttonsMatrix,  error_msg));
+                    
 
                     //add each button to the panel
                     centerPanel.add(buttonsMatrix[i][j].getButton());
@@ -420,7 +357,7 @@ public class BoardGUI extends JFrame{
                 } 
                 // adds an empty label to the panel where ther is no buttons 
                 else {
-                    centerPanel.add(new Label("")); // Add an empty label for inaccessible areas
+                    centerPanel.add(new JLabel("")); // Add an empty label for inaccessible areas
                 }
             }
         }  
