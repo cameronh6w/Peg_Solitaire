@@ -43,6 +43,8 @@ public class BoardGUI extends JFrame{
     public static MyButton firstClicked = null;
     public static MyButton secondClicked = null;
     public static JLabel error_msg;
+
+    public  static PrintWriter moveWriter;
  
    /*
     BoardGUI(){
@@ -171,6 +173,17 @@ public class BoardGUI extends JFrame{
 
 */
     BoardGUI(int _size, PegBoard.Type _type, Boolean random){
+   
+        try {
+            moveWriter = new PrintWriter("moves.txt");
+            moveWriter.println("New Game Started");
+            System.out.println("test");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+
+
         board_size = _size;
         board_type = _type;
         boardState = new PegBoard(board_size,board_type, random);
@@ -179,6 +192,19 @@ public class BoardGUI extends JFrame{
 
 
         setLayout(new BorderLayout());
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                if (moveWriter != null) {
+                    moveWriter.println("Game closed by user.");
+                    moveWriter.close();
+                }
+
+                dispose(); // closes window
+                System.exit(0); // fully exits program
+            }
+        });
 
 
         //-------------TOP--------------------------
@@ -235,7 +261,7 @@ public class BoardGUI extends JFrame{
 
         JButton auto_play_button = new JButton();
         auto_play_button.setText("Auto Play");
-        auto_play_button.addActionListener(e -> ActionController.autoPlayAction(  boardState,  buttonsMatrix, error_msg));
+        auto_play_button.addActionListener(e -> ActionController.autoPlayAction(  moveWriter, boardState,  buttonsMatrix, error_msg));
         rightPanel.add(auto_play_button);
 
         JButton random_play_button = new JButton();
@@ -325,11 +351,14 @@ public class BoardGUI extends JFrame{
 
 
     public void resetBoard(int _size, PegBoard.Type _type, Boolean random){
+        //ActionController.closeWriter();
         this.dispose();
         new BoardGUI(_size,_type,random);
     }
 
     public static void createButtonUI(PegBoard boardState, MyButton[][] buttonsMatrix, JPanel centerPanel, int  board_size){
+       
+        
         //fill the grid with buttons
 
         for (int i = 0; i < board_size; i++) {
@@ -348,8 +377,9 @@ public class BoardGUI extends JFrame{
                     
                     //give every button an action when clicked
 
-                    button.getButton().addActionListener(e -> firstClicked = ActionController.buttonAction( firstClicked,  button,  boardState,  buttonsMatrix,  error_msg));
-                    
+                    button.getButton().addActionListener(e -> firstClicked = ActionController.buttonAction( moveWriter, firstClicked,  button,  boardState,  buttonsMatrix,  error_msg));
+   
+
 
                     //add each button to the panel
                     centerPanel.add(buttonsMatrix[i][j].getButton());
