@@ -45,6 +45,8 @@ public class BoardGUI extends JFrame{
     public static JLabel error_msg;
 
     public  static PrintWriter moveWriter;
+
+    public static Boolean isRunningRandom = false;
  
    /*
     BoardGUI(){
@@ -172,8 +174,9 @@ public class BoardGUI extends JFrame{
     }
 
 */
-    BoardGUI(int _size, PegBoard.Type _type, Boolean random){
+    BoardGUI(int _size, PegBoard.Type _type, Boolean random, PrintWriter _moveWriter){
    
+        /* 
         try {
             moveWriter = new PrintWriter("moves.txt");
             moveWriter.println("New Game Started");
@@ -181,7 +184,11 @@ public class BoardGUI extends JFrame{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+
+        isRunningRandom =random;
     
+        moveWriter =_moveWriter;
 
 
         board_size = _size;
@@ -261,7 +268,7 @@ public class BoardGUI extends JFrame{
 
         JButton auto_play_button = new JButton();
         auto_play_button.setText("Auto Play");
-        auto_play_button.addActionListener(e -> ActionController.autoPlayAction(  moveWriter, boardState,  buttonsMatrix, error_msg));
+        auto_play_button.addActionListener(e -> ActionController.autoPlayAction(  moveWriter, boardState,  buttonsMatrix, error_msg, isRunningRandom));
         rightPanel.add(auto_play_button);
 
         JButton random_play_button = new JButton();
@@ -350,10 +357,15 @@ public class BoardGUI extends JFrame{
     }
 
 
-    public void resetBoard(int _size, PegBoard.Type _type, Boolean random){
+    public static void resetBoard(int _size, PegBoard.Type _type, Boolean random){
         //ActionController.closeWriter();
-        this.dispose();
-        new BoardGUI(_size,_type,random);
+        //this.dispose();
+        if(random)
+            moveWriter.println("Randomize board");
+        else
+            moveWriter.println("Reset board");
+        moveWriter.flush();
+        new BoardGUI(_size,_type,random, moveWriter);
     }
 
     public static void createButtonUI(PegBoard boardState, MyButton[][] buttonsMatrix, JPanel centerPanel, int  board_size){
@@ -377,7 +389,8 @@ public class BoardGUI extends JFrame{
                     
                     //give every button an action when clicked
 
-                    button.getButton().addActionListener(e -> firstClicked = ActionController.buttonAction( moveWriter, firstClicked,  button,  boardState,  buttonsMatrix,  error_msg));
+                    
+                    button.getButton().addActionListener(e -> firstClicked = ActionController.buttonAction( moveWriter, firstClicked,  button,  boardState,  buttonsMatrix,  error_msg, isRunningRandom));
    
 
 
